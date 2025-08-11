@@ -526,8 +526,36 @@ require("lazy").setup({
 			local lspconfig = require("lspconfig")
 
 			lspconfig.clangd.setup({
-				cmd = { "clangd", "--header-insertion=never" },
+				cmd = { "clangd", "--header-insertion=never", "--compile-commands-dir=build" },
 				capabilities = capabilities,
+			})
+
+			lspconfig.zls.setup({
+				-- Server-specific settings. See `:help lspconfig-setup`
+
+				-- omit the following line if `zls` is in your PATH
+				-- There are two ways to set config options:
+				--   - edit your `zls.json` that applies to any editor that uses ZLS
+				--   - set in-editor config options with the `settings` field below.
+				--
+				-- Further information on how to configure ZLS:
+				-- https://zigtools.org/zls/configure/
+				settings = {
+					zls = {
+						-- Whether to enable build-on-save diagnostics
+						--
+						-- Further information about build-on save:
+						-- https://zigtools.org/zls/guides/build-on-save/
+						-- enable_build_on_save = true,
+
+						-- Neovim already provides basic syntax highlighting
+						semantic_tokens = "partial",
+
+						-- omit the following line if `zig` is in your PATH
+						zig_exe_path = "/usr/bin/zig",
+						zig_lib_path = "/usr/lib/zig/lib",
+					},
+				},
 			})
 
 			-- Enable the following language servers
@@ -768,20 +796,35 @@ require("lazy").setup({
 		--				comments = { italic = false }, -- Disable italics in comments
 		--			},
 		--		})
-		"ribru17/bamboo.nvim",
-		lazy = false,
-		priority = 1000,
-		config = function()
-			require("bamboo").setup({
-				-- optional configuration here
-			})
-			require("bamboo").load()
 
-			-- Load the colorscheme here.
-			-- Like many other themes, this one has different styles, and you could load
-			-- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-			vim.cmd.colorscheme("bamboo")
-		end,
+		{
+			"ribru17/bamboo.nvim",
+			lazy = false,
+			priority = 1000,
+			config = function()
+				require("bamboo").setup({
+					-- optional configuration here
+				})
+				require("bamboo").load()
+
+				-- Load the colorscheme here.
+				-- Like many other themes, this one has different styles, and you could load
+				-- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
+				vim.cmd.colorscheme("bamboo")
+			end,
+		},
+
+		-- {
+		-- 	"navarasu/onedark.nvim",
+		-- 	priority = 1000, -- make sure to load this before all the other start plugins
+		-- 	config = function()
+		-- 		require("onedark").setup({
+		-- 			style = "darker",
+		-- 		})
+		-- 		-- Enable theme
+		-- 		require("onedark").load()
+		-- 	end,
+		-- },
 	},
 
 	-- Highlight todo, notes, etc in comments
